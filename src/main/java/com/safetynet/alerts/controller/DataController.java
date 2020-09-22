@@ -6,24 +6,25 @@ import com.safetynet.alerts.model.Firestations;
 import com.safetynet.alerts.model.MedicalRecords;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.model.specific.*;
-import com.safetynet.alerts.service.DataFileAccess;
+import com.safetynet.alerts.repository.DataFileAccess;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class DataController {
 
+    private static final Logger logger = LogManager.getLogger(DataController.class);
+
     private DataFileAccess dataFileAccess;
 
     public DataController(@Autowired DataFileAccess dataFileAccess) {
         this.dataFileAccess = dataFileAccess;
     }
-
 
     @JsonView(View.FirestationById.class)
     @GetMapping(value = "/firestation", produces = "application/json")
@@ -40,8 +41,12 @@ public class DataController {
                 } else nbChildren++;
             }
         }
-        if (personList.size() == 0) return null;
+        if (personList.size() == 0) {
+            logger.info("Request success but empty answer");
+            return null;
+        }
         FirestationsZone firestationsZone = new FirestationsZone(personList, nbAdults, nbChildren);
+        logger.info("Request successful");
         return firestationsZone;
     }
 
@@ -65,8 +70,12 @@ public class DataController {
                 }
             }
         }
-        if (listChild.size() == 0) return null;
+        if (listChild.size() == 0) {
+            logger.info("Request success but empty answer");
+            return null;
+        }
         ChildAlert childAlert = new ChildAlert(address, listChild, listAdult);
+        logger.info("Request successful");
         return childAlert;
     }
 
@@ -80,7 +89,11 @@ public class DataController {
                 listPerson.add(person);
             }
         }
-        if (listPerson.size() == 0) return null;
+        if (listPerson.size() == 0) {
+            logger.info("Request success but empty answer");
+            return null;
+        }
+        logger.info("Request successful");
         return listPerson;
     }
 
@@ -90,7 +103,10 @@ public class DataController {
         ArrayList<FullInfoPerson> fireInfoPerson = new ArrayList<FullInfoPerson>();
         ArrayList<Integer> stationNumber = dataFileAccess.getStationByAddress(address);
 
-        if (stationNumber.size() == 0) return null;
+        if (stationNumber.size() == 0) {
+            logger.info("Request success but empty answer");
+            return null;
+        }
         for (Person person : dataFileAccess.dataFile.getPersons()) {
             if (person.getAddress().compareTo(address) == 0) {
                 fireInfoPerson.add(new FullInfoPerson(person.getFirstName(), person.getLastName(),
@@ -101,6 +117,7 @@ public class DataController {
             }
         }
         FireMedicalRecord fireMedicalRecord = new FireMedicalRecord(stationNumber, fireInfoPerson);
+        logger.info("Request successful");
         return fireMedicalRecord;
     }
 
@@ -149,7 +166,11 @@ public class DataController {
                 infoByStationList.add(new InfoByStation(infoByAddressList, stationNumber));
             }
         }
-        if (infoByStationList.size() == 0) return null;
+        if (infoByStationList.size() == 0) {
+            logger.info("Request success but empty answer");
+            return null;
+        }
+        logger.info("Request successful");
         return infoByStationList;
     }
 
@@ -187,7 +208,11 @@ public class DataController {
                 }
             }
         }
-        if (fullInfoPersonList.size() == 0) return null;
+        if (fullInfoPersonList.size() == 0) {
+            logger.info("Request success but empty answer");
+            return null;
+        }
+        logger.info("Request successful");
         return fullInfoPersonList;
     }
 
@@ -201,55 +226,67 @@ public class DataController {
                 listPerson.add(person);
             }
         }
-        if (listPerson.size() == 0) return null;
+        if (listPerson.size() == 0) {
+            logger.info("Request success but empty answer");
+            return null;
+        }
+        logger.info("Request successful");
         return listPerson;
     }
 
     @PostMapping(
             value = "/person", consumes = "application/json", produces = "application/json")
     public Person createPerson(@RequestBody Person person) {
+        logger.info("Request successful");
         return dataFileAccess.savePerson(person, dataFileAccess.dataFile.getPersons());
     }
 
     @PutMapping(
             value = "/person", consumes = "application/json", produces = "application/json")
     public Person updatePerson(@RequestBody Person person) {
+        logger.info("Request successful");
         return dataFileAccess.updatePerson(person, dataFileAccess.dataFile.getPersons());
     }
 
     @DeleteMapping(
             value = "/person", consumes = "application/json")
     public void deletePerson(@RequestBody Person person) {
+        logger.info("Request successful");
         dataFileAccess.deletePerson(person, dataFileAccess.dataFile.getPersons());
     }
 
     @PostMapping(
             value = "/medicalRecords", consumes = "application/json", produces = "application/json")
     public MedicalRecords createMedicalRecords(@RequestBody MedicalRecords medicalRecords) {
+        logger.info("Request successful");
         return dataFileAccess.saveMedicalRecords(medicalRecords, dataFileAccess.dataFile.getMedicalrecords());
     }
 
     @PutMapping(
             value = "/medicalRecords", consumes = "application/json", produces = "application/json")
     public MedicalRecords updateMedicalRecords(@RequestBody MedicalRecords medicalRecords) {
+        logger.info("Request successful");
         return dataFileAccess.updateMedicalRecords(medicalRecords, dataFileAccess.dataFile.getMedicalrecords());
     }
 
     @DeleteMapping(
             value = "/medicalRecords", consumes = "application/json")
     public void deleteMedicalRecords(@RequestBody MedicalRecords medicalRecords) {
+        logger.info("Request successful");
         dataFileAccess.deleteMedicalRecords(medicalRecords, dataFileAccess.dataFile.getMedicalrecords());
     }
 
     @PostMapping(
             value = "/firestation", consumes = "application/json", produces = "application/json")
     public Firestations saveFirestation(@RequestBody Firestations firestations) {
+        logger.info("Request successful");
         return dataFileAccess.saveFirestation(firestations, dataFileAccess.dataFile.getFirestations());
     }
 
     @DeleteMapping(
             value = "/firestation", consumes = "application/json")
     public void deleteFirestation (@RequestBody Firestations firestations) {
+        logger.info("Request successful");
         dataFileAccess.deleteFirestation(firestations, dataFileAccess.dataFile.getFirestations());
     }
 
