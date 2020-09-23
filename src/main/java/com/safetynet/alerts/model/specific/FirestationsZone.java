@@ -5,25 +5,26 @@ import com.safetynet.alerts.controller.util.View;
 import com.safetynet.alerts.model.Person;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @JsonView(View.FirestationById.class)
 public class FirestationsZone {
 
-    private ArrayList<Person> persons;
+    private List<Person> persons;
     private int adults;
     private int children;
 
-    public FirestationsZone(ArrayList<Person> persons, int adults, int children) {
+    public FirestationsZone(List<Person> persons, int adults, int children) {
         this.persons = persons;
         this.adults = adults;
         this.children = children;
     }
 
-    public ArrayList<Person> getPersons() {
+    public List<Person> getPersons() {
         return persons;
     }
 
-    public void setPersons(ArrayList<Person> persons) {
+    public void setPersons(List<Person> persons) {
         this.persons = persons;
     }
 

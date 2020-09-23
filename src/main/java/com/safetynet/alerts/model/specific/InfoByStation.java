@@ -4,22 +4,23 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.safetynet.alerts.controller.util.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @JsonView(View.FilterFloodStations.class)
 public class InfoByStation {
     private int station;
-    private ArrayList<InfoByAddress> listInfo;
+    private List<InfoByAddress> listInfo;
 
-    public InfoByStation(ArrayList<InfoByAddress> listInfoByAddresses, int station) {
+    public InfoByStation(List<InfoByAddress> listInfoByAddresses, int station) {
         this.listInfo = listInfoByAddresses;
         this.station = station;
     }
 
-    public ArrayList<InfoByAddress> getListInfo() {
+    public List<InfoByAddress> getListInfo() {
         return listInfo;
     }
 
-    public void setListInfo(ArrayList<InfoByAddress> listInfo) {
+    public void setListInfo(List<InfoByAddress> listInfo) {
         this.listInfo = listInfo;
     }
 

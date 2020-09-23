@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.safetynet.alerts.controller.util.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FullInfoPerson {
 
@@ -35,15 +36,15 @@ public class FullInfoPerson {
     private int age;
 
     @JsonView(View.FullMedications.class)
-    private ArrayList<String> medications;
+    private List<String> medications;
 
     @JsonView(View.FullAllergies.class)
-    private ArrayList<String> allergies;
+    private List<String> allergies;
 
     @JsonView(View.FullStation.class)
     private int station;
 
-    public FullInfoPerson(String firstName, String lastName, String address, String city, String zip, String phone, String email, String birthdate, int age, ArrayList<String> medications, ArrayList<String> allergies, int station) {
+    public FullInfoPerson(String firstName, String lastName, String address, String city, String zip, String phone, String email, String birthdate, int age, List<String> medications, List<String> allergies, int station) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -130,19 +131,19 @@ public class FullInfoPerson {
         this.age = age;
     }
 
-    public ArrayList<String> getMedications() {
+    public List<String> getMedications() {
         return medications;
     }
 
-    public void setMedications(ArrayList<String> medications) {
+    public void setMedications(List<String> medications) {
         this.medications = medications;
     }
 
-    public ArrayList<String> getAllergies() {
+    public List<String> getAllergies() {
         return allergies;
     }
 
-    public void setAllergies(ArrayList<String> allergies) {
+    public void setAllergies(List<String> allergies) {
         this.allergies = allergies;
     }
 

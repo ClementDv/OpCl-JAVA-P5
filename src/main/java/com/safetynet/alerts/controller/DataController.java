@@ -6,7 +6,9 @@ import com.safetynet.alerts.model.Firestations;
 import com.safetynet.alerts.model.MedicalRecords;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.model.specific.*;
-import com.safetynet.alerts.repository.DataFileAccess;
+import com.safetynet.alerts.service.FireStationsService;
+import com.safetynet.alerts.service.MedicalRecordsService;
+import com.safetynet.alerts.service.PersonsService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,224 +19,100 @@ import java.util.List;
 
 @RestController
 public class DataController {
-
     private static final Logger logger = LogManager.getLogger(DataController.class);
 
-    private DataFileAccess dataFileAccess;
+    @Autowired
+    private FireStationsService fireStationsService;
 
-    public DataController(@Autowired DataFileAccess dataFileAccess) {
-        this.dataFileAccess = dataFileAccess;
-    }
+    @Autowired
+    private MedicalRecordsService medicalRecordsService;
+
+    @Autowired
+    private PersonsService personsService;
 
     @JsonView(View.FirestationById.class)
     @GetMapping(value = "/firestation", produces = "application/json")
     public FirestationsZone getFirestationsByID(@RequestParam int stationNumber) {
-        ArrayList<Person> personList = new ArrayList<Person>();
-        int nbChildren = 0;
-        int nbAdults = 0;
-
-        for (Person person : dataFileAccess.dataFile.getPersons()) {
-            if (dataFileAccess.getStationByAddressFromPerson(person) == stationNumber) {
-                personList.add(person);
-                if (dataFileAccess.getAgeFromPerson(person) > 18) {
-                    nbAdults++;
-                } else nbChildren++;
-            }
-        }
-        if (personList.size() == 0) {
+        FirestationsZone result = fireStationsService.getFirestationZone(stationNumber);
+        if (result.getPersons().size() == 0) {
             logger.info("Request success but empty answer");
-            return null;
         }
-        FirestationsZone firestationsZone = new FirestationsZone(personList, nbAdults, nbChildren);
-        logger.info("Request successful");
-        return firestationsZone;
+        else logger.info("Request successful");
+        return result;
     }
 
     @JsonView(View.FilterChildAlertEndpoints.class)
     @GetMapping(value = "/childAlert", produces = "application/json")
     public ChildAlert getChildAlertFromAddress(@RequestParam String address) {
-        ArrayList<FullInfoPerson> listChild = new ArrayList<FullInfoPerson>();
-        ArrayList<FullInfoPerson> listAdult = new ArrayList<FullInfoPerson>();
-        int age;
+        ChildAlert result = personsService.getChildAlertFromAddress(address);
 
-        for (Person person : dataFileAccess.dataFile.getPersons()) {
-            if (person.getAddress().compareTo(address) == 0) {
-                if ((age = dataFileAccess.getAgeFromPerson(person)) < 19) {
-                    listChild.add(new FullInfoPerson(person.getFirstName(), person.getLastName(),
-                            null, null, null, null, null, null,
-                            age, null, null, 0));
-                } else {
-                    listAdult.add(new FullInfoPerson(person.getFirstName(), person.getLastName(),
-                            null, null, null, null, null, null,
-                            age, null, null, 0));
-                }
-            }
-        }
-        if (listChild.size() == 0) {
-            logger.info("Request success but empty answer");
-            return null;
-        }
-        ChildAlert childAlert = new ChildAlert(address, listChild, listAdult);
         logger.info("Request successful");
-        return childAlert;
+        return result;
     }
 
     @JsonView(View.Phone.class)
     @GetMapping(value = "phoneAlert", produces = "application/json")
-    public ArrayList<Person> getPhoneAlertFromFirestations(@RequestParam int firestation) {
-        ArrayList<Person> listPerson = new ArrayList<Person>();
+    public List<Person> getPhoneAlertFromFirestations(@RequestParam int firestation) {
+        List<Person> result = fireStationsService.getPhoneAlertFromFirestations(firestation);
 
-        for (Person person : dataFileAccess.dataFile.getPersons()) {
-            if (dataFileAccess.getStationByAddressFromPerson(person) == firestation) {
-                listPerson.add(person);
-            }
-        }
-        if (listPerson.size() == 0) {
+        if (result.size() == 0) {
             logger.info("Request success but empty answer");
-            return null;
         }
         logger.info("Request successful");
-        return listPerson;
+        return result;
     }
 
     @JsonView(View.FilterFireEndpoints.class)
     @GetMapping(value = "fire", produces = "application/json")
     public FireMedicalRecord getPersonInfosByAddressIfFire(@RequestParam String address) {
-        ArrayList<FullInfoPerson> fireInfoPerson = new ArrayList<FullInfoPerson>();
-        ArrayList<Integer> stationNumber = dataFileAccess.getStationByAddress(address);
+        FireMedicalRecord result = fireStationsService.getPersonInfosByAddressIfFire(address);
 
-        if (stationNumber.size() == 0) {
-            logger.info("Request success but empty answer");
-            return null;
-        }
-        for (Person person : dataFileAccess.dataFile.getPersons()) {
-            if (person.getAddress().compareTo(address) == 0) {
-                fireInfoPerson.add(new FullInfoPerson(person.getFirstName(), person.getLastName(),
-                        null, null, null, person.getPhone(), null, null,
-                        dataFileAccess.getAgeFromPerson(person),
-                        dataFileAccess.getMedicationsFromPerson(person),
-                        dataFileAccess.getAllergiesFromPerson(person), 0));
-            }
-        }
-        FireMedicalRecord fireMedicalRecord = new FireMedicalRecord(stationNumber, fireInfoPerson);
         logger.info("Request successful");
-        return fireMedicalRecord;
+        return result;
     }
 
-    private static boolean isPartOfStation(int station, ArrayList<Integer> stationArr) {
-        for (Integer stationNumber : stationArr) {
-            if (station == stationNumber)
-                return true;
-        }
-        return false;
-    }
 
     @JsonView(View.FilterFloodStations.class)
     @GetMapping(value = "flood/stations", produces = "application/json")
-    public ArrayList<InfoByStation> getPersonInfoByStationsList(@RequestParam List<Integer> stations) {
-        ArrayList<InfoByStation> infoByStationList = new ArrayList<InfoByStation>();
-        ArrayList<Integer> stationArr = new ArrayList<Integer>();
-        int stationCounterRequest = 0;
+    public List<InfoByStation> getPersonInfoByStationsList(@RequestParam List<Integer> stations) {
+        List<InfoByStation> result = fireStationsService.getPersonInfoByStationsList(stations);
 
-        if (stations != null) {
-            for (int stationNumber : stations) {
-                ArrayList<InfoByAddress> infoByAddressList = new ArrayList<InfoByAddress>();
-                int index;
-                for (Person person : dataFileAccess.dataFile.getPersons()) {
-                    stationArr = dataFileAccess.getStationByAddress(person.getAddress());
-                    if (isPartOfStation(stations.get(stationCounterRequest), stationArr)) {
-                        if ((index = InfoByAddressAlreadyExist(infoByAddressList, person)) == -1) {
-                            ArrayList<FullInfoPerson> fullInfoPersonList = new ArrayList<FullInfoPerson>();
-                            fullInfoPersonList.add(new FullInfoPerson(person.getFirstName(), person.getLastName(),
-                                    null, null, null, person.getPhone(), null,
-                                    null, dataFileAccess.getAgeFromPerson(person),
-                                    dataFileAccess.getMedicationsFromPerson(person),
-                                    dataFileAccess.getAllergiesFromPerson(person), 0));
-                            infoByAddressList.add(new InfoByAddress(person.getAddress(), fullInfoPersonList));
-                        } else {
-                            InfoByAddress infoByAddress = infoByAddressList.get(index);
-                            infoByAddress.addPerson(new FullInfoPerson(person.getFirstName(), person.getLastName(),
-                                    null, null, null, person.getPhone(), null,
-                                    null, dataFileAccess.getAgeFromPerson(person),
-                                    dataFileAccess.getMedicationsFromPerson(person),
-                                    dataFileAccess.getAllergiesFromPerson(person), 0));
-                        }
-
-                    }
-                }
-                stationCounterRequest++;
-                infoByStationList.add(new InfoByStation(infoByAddressList, stationNumber));
-            }
-        }
-        if (infoByStationList.size() == 0) {
+        if (result.size() == 0) {
             logger.info("Request success but empty answer");
-            return null;
         }
         logger.info("Request successful");
-        return infoByStationList;
+        return result;
     }
 
-    private static int InfoByAddressAlreadyExist(ArrayList<InfoByAddress> infoByAddressList, Person person) {
-        if (infoByAddressList.size() != 0) {
-            for (InfoByAddress infoByAddress : infoByAddressList) {
-                if (infoByAddress.getAddress().compareTo(person.getAddress()) == 0) {
-                    return infoByAddressList.indexOf(infoByAddress);
-                }
-            }
-        }
-        return -1;
-    }
 
     @JsonView(View.FilterFullInfoByName.class)
     @GetMapping(value = "personInfo", produces = "application/json")
-    public ArrayList<FullInfoPerson> getFullInfoByName(
+    public List<FullInfoPerson> getFullInfoByName(
             @RequestParam(value = "firstName", required = false) String firstName,
-            @RequestParam(value = "lastName", required = true) String lastName) {
-        ArrayList<FullInfoPerson> fullInfoPersonList = new ArrayList<FullInfoPerson>();
-        for (Person person : dataFileAccess.dataFile.getPersons()) {
-            if (firstName != null) {
-                if (firstName.compareTo(person.getFirstName()) == 0 && lastName.compareTo(person.getLastName()) == 0) {
-                    fullInfoPersonList.add(new FullInfoPerson(person.getFirstName(), person.getLastName(),
-                            person.getAddress(), person.getCity(), person.getZip(), null, person.getEmail(),
-                            null, dataFileAccess.getAgeFromPerson(person), dataFileAccess.getMedicationsFromPerson(person),
-                            dataFileAccess.getAllergiesFromPerson(person), 0));
-                }
-            } else {
-                if (lastName.compareTo(person.getLastName()) == 0) {
-                    fullInfoPersonList.add(new FullInfoPerson(person.getFirstName(), person.getLastName(),
-                            person.getAddress(), person.getCity(), person.getZip(), null, person.getEmail(),
-                            null, dataFileAccess.getAgeFromPerson(person), dataFileAccess.getMedicationsFromPerson(person),
-                            dataFileAccess.getAllergiesFromPerson(person), 0));
-                }
-            }
-        }
-        if (fullInfoPersonList.size() == 0) {
+            @RequestParam(value = "lastName") String lastName) {
+        List<FullInfoPerson> result = personsService.getFullInfoByName(firstName, lastName);
+        if (result.size() == 0) {
             logger.info("Request success but empty answer");
             return null;
         }
         logger.info("Request successful");
-        return fullInfoPersonList;
+        return result;
     }
 
     @JsonView(View.FilterEmailPerson.class)
     @GetMapping(value = "communityEmail", produces = "application/json")
-    public ArrayList<Person> getEmailsFromCity(@RequestParam String city) {
-        ArrayList<Person> listPerson = new ArrayList<Person>();
+    public List<Person> getEmailsFromCity(@RequestParam String city) {
+       List<Person> result = personsService.getEmailsFromCity(city);
 
-        for (Person person : dataFileAccess.dataFile.getPersons()) {
-            if (person.getCity().compareTo(city) == 0) {
-                listPerson.add(person);
-            }
-        }
-        if (listPerson.size() == 0) {
+        if (result.size() == 0) {
             logger.info("Request success but empty answer");
             return null;
         }
         logger.info("Request successful");
-        return listPerson;
+        return result;
     }
 
-    @PostMapping(
+   /* @PostMapping(
             value = "/person", consumes = "application/json", produces = "application/json")
     public Person createPerson(@RequestBody Person person) {
         logger.info("Request successful");
@@ -285,9 +163,9 @@ public class DataController {
 
     @DeleteMapping(
             value = "/firestation", consumes = "application/json")
-    public void deleteFirestation (@RequestBody Firestations firestations) {
+    public void deleteFirestation(@RequestBody Firestations firestations) {
         logger.info("Request successful");
         dataFileAccess.deleteFirestation(firestations, dataFileAccess.dataFile.getFirestations());
-    }
+    }*/
 
 }

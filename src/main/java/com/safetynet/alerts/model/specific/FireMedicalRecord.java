@@ -4,31 +4,32 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.safetynet.alerts.controller.util.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @JsonView(View.FilterFireEndpoints.class)
 public class FireMedicalRecord {
 
-    private ArrayList<Integer> stationNumber;
-    private ArrayList<FullInfoPerson> person;
+    private List<Integer> stationNumber;
+    private List<FullInfoPerson> person;
 
-    public FireMedicalRecord(ArrayList<Integer> stationNumber, ArrayList<FullInfoPerson> person) {
+    public FireMedicalRecord(List<Integer> stationNumber, List<FullInfoPerson> person) {
         this.stationNumber = stationNumber;
         this.person = person;
     }
 
-    public ArrayList<Integer> getStationNumber() {
+    public List<Integer> getStationNumber() {
         return stationNumber;
     }
 
-    public void setStationNumber(ArrayList<Integer> stationNumber) {
+    public void setStationNumber(List<Integer> stationNumber) {
         this.stationNumber = stationNumber;
     }
 
-    public ArrayList<FullInfoPerson> getPerson() {
+    public List<FullInfoPerson> getPerson() {
         return person;
     }
 
-    public void setPerson(ArrayList<FullInfoPerson> person) {
+    public void setPerson(List<FullInfoPerson> person) {
         this.person = person;
     }
 

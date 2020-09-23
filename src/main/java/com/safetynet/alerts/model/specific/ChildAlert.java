@@ -4,16 +4,17 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.safetynet.alerts.controller.util.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @JsonView(View.FilterChildAlertEndpoints.class)
 public class ChildAlert {
 
     private String address;
-    private ArrayList<FullInfoPerson> Child;
-    private ArrayList<FullInfoPerson> Adults;
+    private List<FullInfoPerson> Child;
+    private List<FullInfoPerson> Adults;
 
-    public ChildAlert(String address, ArrayList<FullInfoPerson> child, ArrayList<FullInfoPerson> adults) {
+    public ChildAlert(String address, List<FullInfoPerson> child, List<FullInfoPerson> adults) {
         this.address = address;
         Child = child;
         Adults = adults;
@@ -27,19 +28,19 @@ public class ChildAlert {
         this.address = address;
     }
 
-    public ArrayList<FullInfoPerson> getChild() {
+    public List<FullInfoPerson> getChild() {
         return Child;
     }
 
-    public void setChild(ArrayList<FullInfoPerson> child) {
+    public void setChild(List<FullInfoPerson> child) {
         Child = child;
     }
 
-    public ArrayList<FullInfoPerson> getAdults() {
+    public List<FullInfoPerson> getAdults() {
         return Adults;
     }
 
-    public void setAdults(ArrayList<FullInfoPerson> adults) {
+    public void setAdults(List<FullInfoPerson> adults) {
         Adults = adults;
     }
 

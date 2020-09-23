@@ -38,48 +38,74 @@ public class DataFileAccessImpl implements DataFileAccess {
     }
 
     // todo: DataController -> FireStationsService -> DataFileAcces Le controller devrait appeler la mthode depis le serice)
-    @Override
+
     public int getStationByAddressFromPerson(Person person) {
-        return 0;
-    }
-
-    public ArrayList<Integer> getStationByAddress(String address) {
-        ArrayList<Integer> stationNumber = new ArrayList<Integer>();
-
-        for (Firestations fireStation : dataFile.getFirestations()) {
-            if (address.compareTo(fireStation.getAddress()) == 0) {
-                stationNumber.add(fireStation.getStation());
-            }
-        }
-        return stationNumber;
-    }
-
-
-
-
-
-    public ArrayList<String> getMedicationsFromPerson(Person person) {
-        for (MedicalRecords medicalRecords : dataFile.getMedicalrecords()) {
-            if (person.getFirstName().compareTo(medicalRecords.getFirstName()) == 0 &&
-                    person.getLastName().compareTo(medicalRecords.getLastName()) == 0) {
-                return medicalRecords.getMedications();
-            }
-        }
-        return null;
-    }
-
-    public ArrayList<String> getAllergiesFromPerson(Person person) {
-        for (MedicalRecords medicalRecords : dataFile.getMedicalrecords()) {
-            if (person.getFirstName().compareTo(medicalRecords.getFirstName()) == 0 &&
-                    person.getLastName().compareTo(medicalRecords.getLastName()) == 0) {
-                return medicalRecords.getAllergies();
-            }
-        }
-        return null;
+        return getFirestations()
+                .stream()
+                .filter(fireStation -> person.getAddress().equals(fireStation.getAddress()))
+                .findFirst()
+                .map(Firestations::getStation)
+                .orElse(0);
     }
 
     @Override
     public List<Firestations> getFirestations() {
-        return dataFile.getFirestations();
+        return new ArrayList<>(dataFile.getFirestations());
     }
+
+    @Override
+    public List<Person> getPersonsByFirestationNumber(int firestationNumber) {
+        List<Person> result = new ArrayList<>();
+
+        for (Person person : dataFile.getPersons()) {
+            if (getStationByAddressFromPerson(person) == firestationNumber) {
+                result.add(person);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public int getAgeFromPerson(Person person) {
+        int age = 0;
+
+        for (MedicalRecords medicalRecords : dataFile.getMedicalrecords()) {
+            if (person.getFirstName().compareTo(medicalRecords.getFirstName()) == 0 &&
+                    person.getLastName().compareTo(medicalRecords.getLastName()) == 0) {
+                age = getAgeFromBirthdate(medicalRecords.getBirthdate());
+            }
+        }
+        return age;
+    }
+
+    @Override
+    public List<Person> getPersonsByAddress(String address) {
+        List<Person> result = new ArrayList<>();
+
+        for (Person person : dataFile.getPersons()) {
+            if (person.getAddress().equals(address)) {
+                result.add(person);
+            }
+        }
+        return result;
+    }
+
+    private int getAgeFromBirthdate(String birthdate) {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        formatter = formatter.withLocale(Locale.FRANCE);
+        LocalDate birthDate = LocalDate.parse(birthdate, formatter);
+        return Period.between(birthDate, currentDate).getYears();
+    }
+
+    @Override
+    public List<Person> getPersons() {
+        return new ArrayList<>(dataFile.getPersons());
+    }
+
+    @Override
+    public List<MedicalRecords> getMedicalrecords() {
+        return new ArrayList<>(dataFile.getMedicalrecords());
+    }
+
 }

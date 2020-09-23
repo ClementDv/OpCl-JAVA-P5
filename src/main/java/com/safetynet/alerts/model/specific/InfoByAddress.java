@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.safetynet.alerts.controller.util.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @JsonView(View.FilterFloodStations.class)
 public class InfoByAddress {
     private String address;
-    private ArrayList<FullInfoPerson> Persons;
+    private List<FullInfoPerson> Persons;
 
-    public InfoByAddress(String address, ArrayList<FullInfoPerson> listPerson) {
+    public InfoByAddress(String address, List<FullInfoPerson> listPerson) {
         this.address = address;
         this.Persons = listPerson;
     }
@@ -23,11 +24,11 @@ public class InfoByAddress {
         this.address = address;
     }
 
-    public ArrayList<FullInfoPerson> getPersons() {
+    public List<FullInfoPerson> getPersons() {
         return Persons;
     }
 
-    public void setPersons(ArrayList<FullInfoPerson> persons) {
+    public void setPersons(List<FullInfoPerson> persons) {
         this.Persons = persons;
     }
 

@@ -1,6 +1,7 @@
 package com.safetynet.alerts.model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class MedicalRecords {
@@ -8,10 +9,10 @@ public class MedicalRecords {
     private String firstName;
     private String lastName;
     private String birthdate;
-    private ArrayList<String> medications;
-    private ArrayList<String> allergies;
+    private List<String> medications;
+    private List<String> allergies;
 
-    public MedicalRecords(String firstName, String lastName, String birthdate, ArrayList<String> medications, ArrayList<String> allergies) {
+    public MedicalRecords(String firstName, String lastName, String birthdate, List<String> medications, List<String> allergies) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthdate = birthdate;
@@ -46,19 +47,19 @@ public class MedicalRecords {
         this.birthdate = birthdate;
     }
 
-    public ArrayList<String> getMedications() {
+    public List<String> getMedications() {
         return medications;
     }
 
-    public void setMedications(ArrayList<String> medications) {
+    public void setMedications(List<String> medications) {
         this.medications = medications;
     }
 
-    public ArrayList<String> getAllergies() {
+    public List<String> getAllergies() {
         return allergies;
     }
 
-    public void setAllergies(ArrayList<String> allergies) {
+    public void setAllergies(List<String> allergies) {
         this.allergies = allergies;
     }
 
