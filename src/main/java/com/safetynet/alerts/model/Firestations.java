@@ -1,6 +1,5 @@
 package com.safetynet.alerts.model;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class Firestations {

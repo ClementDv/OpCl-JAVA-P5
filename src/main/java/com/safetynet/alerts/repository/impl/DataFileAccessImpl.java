@@ -37,32 +37,16 @@ public class DataFileAccessImpl implements DataFileAccess {
         }
     }
 
-    // todo: DataController -> FireStationsService -> DataFileAcces Le controller devrait appeler la mthode depis le serice)
 
-    public int getStationByAddressFromPerson(Person person) {
+    // todo: DataController -> FireStationsService -> DataFileAcces Le controller devrait appeler la mthode depis le serice)
+    @Override
+    public int getNbStationByAddressFromPerson(Person person) {
         return getFirestations()
                 .stream()
                 .filter(fireStation -> person.getAddress().equals(fireStation.getAddress()))
                 .findFirst()
                 .map(Firestations::getStation)
                 .orElse(0);
-    }
-
-    @Override
-    public List<Firestations> getFirestations() {
-        return new ArrayList<>(dataFile.getFirestations());
-    }
-
-    @Override
-    public List<Person> getPersonsByFirestationNumber(int firestationNumber) {
-        List<Person> result = new ArrayList<>();
-
-        for (Person person : dataFile.getPersons()) {
-            if (getStationByAddressFromPerson(person) == firestationNumber) {
-                result.add(person);
-            }
-        }
-        return result;
     }
 
     @Override
@@ -76,6 +60,18 @@ public class DataFileAccessImpl implements DataFileAccess {
             }
         }
         return age;
+    }
+
+    @Override
+    public List<Person> getPersonsByFirestationNumber(int firestationNumber) {
+        List<Person> result = new ArrayList<>();
+
+        for (Person person : dataFile.getPersons()) {
+            if (getNbStationByAddressFromPerson(person) == firestationNumber) {
+                result.add(person);
+            }
+        }
+        return result;
     }
 
     @Override
@@ -96,6 +92,11 @@ public class DataFileAccessImpl implements DataFileAccess {
         formatter = formatter.withLocale(Locale.FRANCE);
         LocalDate birthDate = LocalDate.parse(birthdate, formatter);
         return Period.between(birthDate, currentDate).getYears();
+    }
+
+    @Override
+    public List<Firestations> getFirestations() {
+        return new ArrayList<>(dataFile.getFirestations());
     }
 
     @Override

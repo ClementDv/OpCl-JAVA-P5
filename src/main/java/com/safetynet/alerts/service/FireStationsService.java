@@ -20,8 +20,6 @@ public interface FireStationsService {
 
     List<InfoByStation> getPersonInfoByStationsList(List<Integer> stations);
 
-    int getNbStationByAddressFromPerson(Person person);
-
     Firestations saveFirestation(Firestations model, List<Firestations> editList);
 
     void deleteFirestation(Firestations model, List<Firestations> editList);

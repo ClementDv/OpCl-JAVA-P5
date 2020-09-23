@@ -1,41 +1,42 @@
 package com.safetynet.alerts.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DataFile {
 
-    private ArrayList<Person> persons;
-    private ArrayList<Firestations> firestations;
-    private ArrayList<MedicalRecords> medicalrecords;
+    private List<Person> persons;
+    private List<Firestations> firestations;
+    private List<MedicalRecords> medicalrecords;
 
-    public DataFile(ArrayList<Person> persons, ArrayList<Firestations> firestations, ArrayList<MedicalRecords> medicalrecords) {
+    public DataFile(List<Person> persons, List<Firestations> firestations, List<MedicalRecords> medicalrecords) {
         this.persons = persons;
         this.firestations = firestations;
         this.medicalrecords = medicalrecords;
     }
 
-    public ArrayList<Person> getPersons() {
+    public List<Person> getPersons() {
         return persons;
     }
 
-    public void setPersons(ArrayList<Person> persons) {
+    public void setPersons(List<Person> persons) {
         this.persons = persons;
     }
 
-    public ArrayList<Firestations> getFirestations() {
+    public List<Firestations> getFirestations() {
         return firestations;
     }
 
-    public void setFirestations(ArrayList<Firestations> firestations) {
+    public void setFirestations(List<Firestations> firestations) {
         this.firestations = firestations;
     }
 
-    public ArrayList<MedicalRecords> getMedicalrecords() {
+    public List<MedicalRecords> getMedicalrecords() {
         return medicalrecords;
     }
 
 
-    public void setMedicalrecords(ArrayList<MedicalRecords> medicalrecords) {
+    public void setMedicalrecords(List<MedicalRecords> medicalrecords) {
         this.medicalrecords = medicalrecords;
     }
 

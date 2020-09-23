@@ -3,7 +3,6 @@ package com.safetynet.alerts.model;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.safetynet.alerts.controller.util.View;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Person {

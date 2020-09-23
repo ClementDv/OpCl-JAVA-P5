@@ -1,10 +1,10 @@
 package com.safetynet.alerts.model.specific;
 
 import com.fasterxml.jackson.annotation.JsonView;
+
 import com.safetynet.alerts.controller.util.View;
 import com.safetynet.alerts.model.Person;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @JsonView(View.FirestationById.class)

@@ -3,7 +3,6 @@ package com.safetynet.alerts.model.specific;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.safetynet.alerts.controller.util.View;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

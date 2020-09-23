@@ -42,7 +42,7 @@ public class FireStationsServiceImpl implements FireStationsService {
         ArrayList<Person> listPerson = new ArrayList<>();
 
         for (Person person : dataFileAccess.getPersons()) {
-            if (getNbStationByAddressFromPerson(person) == firestation) {
+            if (dataFileAccess.getNbStationByAddressFromPerson(person) == firestation) {
                 listPerson.add(person);
             }
         }
@@ -132,16 +132,6 @@ public class FireStationsServiceImpl implements FireStationsService {
             }
         }
         return -1;
-    }
-
-    @Override
-    public int getNbStationByAddressFromPerson(Person person) {
-        return dataFileAccess.getFirestations()
-                .stream()
-                .filter(fireStation -> person.getAddress().equals(fireStation.getAddress()))
-                .findFirst()
-                .map(Firestations::getStation)
-                .orElse(0);
     }
 
     @Override
