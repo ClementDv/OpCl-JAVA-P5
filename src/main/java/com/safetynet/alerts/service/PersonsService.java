@@ -15,10 +15,10 @@ public interface PersonsService {
 
     List<Person> getEmailsFromCity(@RequestParam String city);
 
-    Person savePerson(Person model, List<Person> editList);
+    Person savePerson(Person model);
 
-    Person updatePerson(Person model, List<Person> editList);
+    Person updatePerson(Person model);
 
-    void deletePerson(Person model, List<Person> editList);
+    void deletePerson(Person model);
 
 }

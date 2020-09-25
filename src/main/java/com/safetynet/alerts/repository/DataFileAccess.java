@@ -21,4 +21,20 @@ public interface DataFileAccess {
     List<Person> getPersons();
 
     List<MedicalRecords> getMedicalrecords();
+
+    Person savePerson(Person model);
+
+    Person updatePerson(Person model);
+
+    void deletePerson(Person model);
+
+    MedicalRecords saveMedicalRecords(MedicalRecords model);
+
+    MedicalRecords updateMedicalRecords(MedicalRecords model);
+
+    void deleteMedicalRecords(MedicalRecords model);
+
+    Firestations saveFirestation(Firestations model);
+
+    void deleteFirestation(Firestations model);
 }

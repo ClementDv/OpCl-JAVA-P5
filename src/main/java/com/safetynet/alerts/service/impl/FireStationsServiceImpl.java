@@ -75,8 +75,7 @@ public class FireStationsServiceImpl implements FireStationsService {
                         medicalRecordsService.getAllergiesFromPerson(person), 0));
             }
         }
-        FireMedicalRecord fireMedicalRecord = new FireMedicalRecord(stationNumber, fireInfoPerson);
-        return fireMedicalRecord;
+        return new FireMedicalRecord(stationNumber, fireInfoPerson);
     }
 
     @Override
@@ -135,45 +134,12 @@ public class FireStationsServiceImpl implements FireStationsService {
     }
 
     @Override
-    public Firestations saveFirestation(Firestations model, List<Firestations> editList) {
-        boolean i = true;
-        if (editList != null) {
-            for (Firestations firestations : editList) {
-                if (firestations.equals(model)) {
-                    i = false;
-                    break;
-                }
-            }
-            if (i == true) {
-                editList.add(model);
-                //logger.info("Firestation added");
-                return model;
-            }
-        } else {
-            editList.add(model);
-            //logger.info("Firestation added");
-            return model;
-        }
-        //logger.info("Firestation couldn't be added");
-        return null;
+    public Firestations saveFirestation(Firestations model) {
+       return dataFileAccess.saveFirestation(model);
     }
 
     @Override
-    public void deleteFirestation(Firestations model, List<Firestations> editList) {
-        boolean i = false;
-
-        if (editList != null) {
-            for (Firestations firestations : editList) {
-                if (firestations.equals(model)) {
-                    editList.remove(firestations);
-                    //logger.info("Firestation removed");
-                    i = true;
-                    break;
-                }
-            }
-            if (i == false) {
-                //logger.info("Firestation couldn't be removed");
-            }
-        }
+    public void deleteFirestation(Firestations model) {
+        dataFileAccess.deleteFirestation(model);
     }
 }

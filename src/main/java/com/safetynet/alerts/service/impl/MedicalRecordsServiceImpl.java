@@ -40,63 +40,17 @@ public class MedicalRecordsServiceImpl implements MedicalRecordsService {
 
 
     @Override
-    public MedicalRecords saveMedicalRecords(MedicalRecords model, List<MedicalRecords> editList) {
-        boolean i = true;
-        if (editList != null) {
-            for (MedicalRecords medicalRecords : editList) {
-                if (medicalRecords.equals(model)) {
-                    i = false;
-                    break;
-                }
-            }
-            if (i) {
-                editList.add(model);
-                //logger.info("MedicalRecords added");
-                return model;
-            }
-        } else {
-            if (editList != null) editList.add(model);
-            //logger.info("MedicalRecords added");
-            return model;
-        }
-        //logger.info("MedicalRecords couldn't be added");
-        return null;
+    public MedicalRecords saveMedicalRecords(MedicalRecords model) {
+        return dataFileAccess.saveMedicalRecords(model);
     }
 
     @Override
-    public MedicalRecords updateMedicalRecords(MedicalRecords model, List<MedicalRecords> editList) {
-        if (editList != null) {
-            for (MedicalRecords medicalRecords : editList) {
-                if (model.getFirstName().compareTo(medicalRecords.getFirstName()) == 0 &&
-                        model.getLastName().compareTo(medicalRecords.getLastName()) == 0) {
-                    editList.set(editList.indexOf(medicalRecords), model);
-                    break;
-                }
-            }
-            //logger.info("MedicalRecords updated");
-            return model;
-        }
-        //logger.info("MedicalRecords couldn't be updated");
-        return null;
+    public MedicalRecords updateMedicalRecords(MedicalRecords model) {
+       return dataFileAccess.updateMedicalRecords(model);
     }
 
     @Override
-    public void deleteMedicalRecords(MedicalRecords model, List<MedicalRecords> editList) {
-        boolean i = false;
-
-        if (editList != null) {
-            for (MedicalRecords medicalRecords : editList) {
-                if (model.getFirstName().compareTo(medicalRecords.getFirstName()) == 0 &&
-                        model.getLastName().compareTo(medicalRecords.getLastName()) == 0) {
-                    editList.remove(medicalRecords);
-                    //logger.info("MedicalRecords removed");
-                    i = true;
-                    break;
-                }
-            }
-            if (i == false) {
-                //logger.info("MedicalRecords couldn't be removed&");
-            }
-        }
+    public void deleteMedicalRecords(MedicalRecords model) {
+       dataFileAccess.deleteMedicalRecords(model);
     }
 }

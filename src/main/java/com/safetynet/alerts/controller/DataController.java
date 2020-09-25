@@ -2,6 +2,8 @@ package com.safetynet.alerts.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.safetynet.alerts.controller.util.View;
+import com.safetynet.alerts.model.Firestations;
+import com.safetynet.alerts.model.MedicalRecords;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.model.specific.*;
 import com.safetynet.alerts.service.FireStationsService;
@@ -109,60 +111,52 @@ public class DataController {
         return result;
     }
 
-   /* @PostMapping(
+    @PostMapping(
             value = "/person", consumes = "application/json", produces = "application/json")
     public Person createPerson(@RequestBody Person person) {
-        logger.info("Request successful");
-        return dataFileAccess.savePerson(person);
+        return personsService.savePerson(person);
     }
 
     @PutMapping(
             value = "/person", consumes = "application/json", produces = "application/json")
     public Person updatePerson(@RequestBody Person person) {
-        logger.info("Request successful");
-        return dataFileAccess.updatePerson(person);
+        return personsService.updatePerson(person);
     }
 
     @DeleteMapping(
             value = "/person", consumes = "application/json")
     public void deletePerson(@RequestBody Person person) {
-        logger.info("Request successful");
-        dataFileAccess.deletePerson(person);
+        personsService.deletePerson(person);
     }
 
     @PostMapping(
             value = "/medicalRecords", consumes = "application/json", produces = "application/json")
     public MedicalRecords createMedicalRecords(@RequestBody MedicalRecords medicalRecords) {
-        logger.info("Request successful");
-        return dataFileAccess.saveMedicalRecords(medicalRecords);
+        return medicalRecordsService.saveMedicalRecords(medicalRecords);
     }
 
     @PutMapping(
             value = "/medicalRecords", consumes = "application/json", produces = "application/json")
     public MedicalRecords updateMedicalRecords(@RequestBody MedicalRecords medicalRecords) {
-        logger.info("Request successful");
-        return dataFileAccess.updateMedicalRecords(medicalRecords);
+        return medicalRecordsService.updateMedicalRecords(medicalRecords);
     }
 
     @DeleteMapping(
             value = "/medicalRecords", consumes = "application/json")
     public void deleteMedicalRecords(@RequestBody MedicalRecords medicalRecords) {
-        logger.info("Request successful");
-        dataFileAccess.deleteMedicalRecords(medicalRecords);
+        medicalRecordsService.deleteMedicalRecords(medicalRecords);
     }
 
     @PostMapping(
             value = "/firestation", consumes = "application/json", produces = "application/json")
     public Firestations saveFirestation(@RequestBody Firestations firestations) {
-        logger.info("Request successful");
-        return dataFileAccess.saveFirestation(firestations);
+        return fireStationsService.saveFirestation(firestations);
     }
 
     @DeleteMapping(
             value = "/firestation", consumes = "application/json")
     public void deleteFirestation(@RequestBody Firestations firestations) {
-        logger.info("Request successful");
-        return fireStationsService.deleteFirestation(firestations);
-    }*/
+        fireStationsService.deleteFirestation(firestations);
+    }
 
 }

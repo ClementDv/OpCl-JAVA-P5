@@ -8,11 +8,13 @@ import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.DataFileAccess;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.Mergeable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -109,4 +111,95 @@ public class DataFileAccessImpl implements DataFileAccess {
         return new ArrayList<>(dataFile.getMedicalrecords());
     }
 
+    @Override
+    public Person savePerson(Person model) {
+        boolean i;
+        if (dataFile.getPersons() != null) {
+            i = dataFile.getPersons().stream().noneMatch(person -> person.equals(model));
+            if (i) {
+                dataFile.getPersons().add(model);
+                return model;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Person updatePerson(Person model) {
+        if (dataFile.getPersons() != null) {
+            dataFile.getPersons().stream().filter(person -> model.getFirstName().compareTo(person.getFirstName()) == 0 &&
+                    model.getLastName().compareTo(person.getLastName()) == 0).findFirst().ifPresent(person -> dataFile.getPersons().set(dataFile.getPersons().indexOf(person), model));
+            return model;
+        }
+        return null;
+    }
+
+    @Override
+    public void deletePerson(Person model) {
+        if (dataFile.getPersons() != null) {
+            dataFile.getPersons().stream().filter(person -> model.getFirstName().compareTo(person.getFirstName()) == 0 &&
+                    model.getLastName().compareTo(person.getLastName()) == 0).findFirst().ifPresent(dataFile.getPersons()::remove);
+        }
+    }
+
+    @Override
+    public MedicalRecords saveMedicalRecords(MedicalRecords model) {
+        boolean i;
+        if (dataFile.getMedicalrecords() != null) {
+            i = dataFile.getMedicalrecords().stream().noneMatch(medicalRecords -> medicalRecords.equals(model));
+            if (i) {
+                dataFile.getMedicalrecords().add(model);
+                return model;
+            }
+        } else {
+            List<MedicalRecords> medicalRecordsList = new ArrayList<>();
+            medicalRecordsList.add(model);
+            dataFile.setMedicalrecords(medicalRecordsList);
+            return model;
+        }
+        return null;
+    }
+
+    @Override
+    public MedicalRecords updateMedicalRecords(MedicalRecords model) {
+        if (dataFile.getMedicalrecords() != null) {
+            dataFile.getMedicalrecords().stream().filter(medicalRecords -> model.getFirstName().compareTo(medicalRecords.getFirstName()) == 0 &&
+                    model.getLastName().compareTo(medicalRecords.getLastName()) == 0).findFirst().ifPresent(medicalRecords -> dataFile.getMedicalrecords().set(dataFile.getMedicalrecords().indexOf(medicalRecords), model));
+            return model;
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteMedicalRecords(MedicalRecords model) {
+        if (dataFile.getMedicalrecords() != null) {
+            dataFile.getMedicalrecords().stream().filter(medicalRecords -> model.getFirstName().compareTo(medicalRecords.getFirstName()) == 0 &&
+                    model.getLastName().compareTo(medicalRecords.getLastName()) == 0).findFirst().ifPresent(medicalRecords -> dataFile.getMedicalrecords().remove(medicalRecords));
+        }
+    }
+
+    @Override
+    public Firestations saveFirestation(Firestations model) {
+        boolean i;
+        if (dataFile.getFirestations() != null) {
+            i = dataFile.getFirestations().stream().noneMatch(firestations -> firestations.equals(model));
+            if (i) {
+                dataFile.getFirestations().add(model);
+                return model;
+            }
+        } else {
+            List<Firestations> firestationsList = new ArrayList<>();
+            firestationsList.add(model);
+            dataFile.setFirestations(firestationsList);
+            return model;
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteFirestation(Firestations model) {
+        if (dataFile.getFirestations() != null) {
+            dataFile.getFirestations().stream().filter(firestations -> firestations.equals(model)).findFirst().ifPresent(firestations -> dataFile.getFirestations().remove(firestations));
+        }
+    }
 }

@@ -11,9 +11,9 @@ public interface MedicalRecordsService {
 
     List<String> getAllergiesFromPerson(Person person);
 
-    void deleteMedicalRecords(MedicalRecords model, List<MedicalRecords> editList);
+    void deleteMedicalRecords(MedicalRecords model);
 
-    MedicalRecords updateMedicalRecords(MedicalRecords model, List<MedicalRecords> editList);
+    MedicalRecords updateMedicalRecords(MedicalRecords model);
 
-    MedicalRecords saveMedicalRecords(MedicalRecords model, List<MedicalRecords> editList);
+    MedicalRecords saveMedicalRecords(MedicalRecords model);
 }
