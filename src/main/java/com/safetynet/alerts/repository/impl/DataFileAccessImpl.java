@@ -8,19 +8,18 @@ import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.DataFileAccess;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.Mergeable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 @Repository
 public class DataFileAccessImpl implements DataFileAccess {
@@ -32,15 +31,13 @@ public class DataFileAccessImpl implements DataFileAccess {
     public DataFileAccessImpl(@Autowired ObjectMapper objectMapper) {
         try {
             this.dataFile = objectMapper.readValue(new File("datafile.json"), DataFile.class);
-            logger.debug("Json correctly mapped !");
+            logger.debug("Json correctly mapped!");
         } catch (IOException e) {
-            logger.error("Error while JSON mapping !");
+            logger.error("Error while JSON mapping!");
             throw new RuntimeException(e);
         }
     }
 
-
-    // todo: DataController -> FireStationsService -> DataFileAcces Le controller devrait appeler la mthode depis le serice)
     @Override
     public int getNbStationByAddressFromPerson(Person person) {
         return getFirestations()
@@ -53,15 +50,13 @@ public class DataFileAccessImpl implements DataFileAccess {
 
     @Override
     public int getAgeFromPerson(Person person) {
-        int age = 0;
-
         for (MedicalRecords medicalRecords : dataFile.getMedicalrecords()) {
-            if (person.getFirstName().compareTo(medicalRecords.getFirstName()) == 0 &&
-                    person.getLastName().compareTo(medicalRecords.getLastName()) == 0) {
-                age = getAgeFromBirthdate(medicalRecords.getBirthdate());
+            if (Objects.equals(person.getFirstName(), medicalRecords.getFirstName()) &&
+                    Objects.equals(person.getLastName(), medicalRecords.getLastName())) {
+                return getAgeFromBirthdate(medicalRecords.getBirthdate());
             }
         }
-        return age;
+        return 0;
     }
 
     @Override
@@ -135,11 +130,8 @@ public class DataFileAccessImpl implements DataFileAccess {
     }
 
     @Override
-    public void deletePerson(Person model) {
-        if (dataFile.getPersons() != null) {
-            dataFile.getPersons().stream().filter(person -> model.getFirstName().compareTo(person.getFirstName()) == 0 &&
-                    model.getLastName().compareTo(person.getLastName()) == 0).findFirst().ifPresent(dataFile.getPersons()::remove);
-        }
+    public boolean deletePerson(Person model) {
+        return dataFile.getPersons().remove(model);
     }
 
     @Override
@@ -171,11 +163,8 @@ public class DataFileAccessImpl implements DataFileAccess {
     }
 
     @Override
-    public void deleteMedicalRecords(MedicalRecords model) {
-        if (dataFile.getMedicalrecords() != null) {
-            dataFile.getMedicalrecords().stream().filter(medicalRecords -> model.getFirstName().compareTo(medicalRecords.getFirstName()) == 0 &&
-                    model.getLastName().compareTo(medicalRecords.getLastName()) == 0).findFirst().ifPresent(medicalRecords -> dataFile.getMedicalrecords().remove(medicalRecords));
-        }
+    public boolean deleteMedicalRecords(MedicalRecords model) {
+        return dataFile.getMedicalrecords().remove(model);
     }
 
     @Override
@@ -197,9 +186,7 @@ public class DataFileAccessImpl implements DataFileAccess {
     }
 
     @Override
-    public void deleteFirestation(Firestations model) {
-        if (dataFile.getFirestations() != null) {
-            dataFile.getFirestations().stream().filter(firestations -> firestations.equals(model)).findFirst().ifPresent(firestations -> dataFile.getFirestations().remove(firestations));
-        }
+    public boolean deleteFirestation(Firestations model) {
+        return dataFile.getFirestations().remove(model);
     }
 }

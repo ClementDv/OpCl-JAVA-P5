@@ -26,15 +26,15 @@ public interface DataFileAccess {
 
     Person updatePerson(Person model);
 
-    void deletePerson(Person model);
+    boolean deletePerson(Person model);
 
     MedicalRecords saveMedicalRecords(MedicalRecords model);
 
     MedicalRecords updateMedicalRecords(MedicalRecords model);
 
-    void deleteMedicalRecords(MedicalRecords model);
+    boolean deleteMedicalRecords(MedicalRecords model);
 
     Firestations saveFirestation(Firestations model);
 
-    void deleteFirestation(Firestations model);
+    boolean deleteFirestation(Firestations model);
 }

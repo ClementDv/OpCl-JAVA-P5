@@ -9,8 +9,6 @@ import com.safetynet.alerts.model.specific.*;
 import com.safetynet.alerts.service.FireStationsService;
 import com.safetynet.alerts.service.MedicalRecordsService;
 import com.safetynet.alerts.service.PersonsService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +16,6 @@ import java.util.List;
 
 @RestController
 public class DataController {
-    private static final Logger logger = LogManager.getLogger(DataController.class);
 
     @Autowired
     private FireStationsService fireStationsService;
@@ -32,55 +29,32 @@ public class DataController {
     @JsonView(View.FirestationById.class)
     @GetMapping(value = "/firestation", produces = "application/json")
     public FirestationsZone getFirestationsByID(@RequestParam int stationNumber) {
-        FirestationsZone result = fireStationsService.getFirestationZone(stationNumber);
-        if (result.getPersons().size() == 0) {
-            logger.info("Request success but empty answer");
-        }
-        else logger.info("Request successful");
-        return result;
+        return fireStationsService.getFirestationZone(stationNumber);
     }
 
     @JsonView(View.FilterChildAlertEndpoints.class)
     @GetMapping(value = "/childAlert", produces = "application/json")
     public ChildAlert getChildAlertFromAddress(@RequestParam String address) {
-        ChildAlert result = personsService.getChildAlertFromAddress(address);
-
-        logger.info("Request successful");
-        return result;
+        return personsService.getChildAlertFromAddress(address);
     }
 
     @JsonView(View.Phone.class)
     @GetMapping(value = "phoneAlert", produces = "application/json")
-    public List<Person> getPhoneAlertFromFirestations(@RequestParam int firestation) {
-        List<Person> result = fireStationsService.getPhoneAlertFromFirestations(firestation);
-
-        if (result.size() == 0) {
-            logger.info("Request success but empty answer");
-        }
-        logger.info("Request successful");
-        return result;
+    public List<String> getPhoneAlertFromFirestations(@RequestParam int firestation) {
+        return fireStationsService.getPhoneAlertFromFirestations(firestation);
     }
 
     @JsonView(View.FilterFireEndpoints.class)
     @GetMapping(value = "fire", produces = "application/json")
     public FireMedicalRecord getPersonInfosByAddressIfFire(@RequestParam String address) {
-        FireMedicalRecord result = fireStationsService.getPersonInfosByAddressIfFire(address);
-
-        logger.info("Request successful");
-        return result;
+        return fireStationsService.getPersonInfosByAddressIfFire(address);
     }
 
 
     @JsonView(View.FilterFloodStations.class)
     @GetMapping(value = "flood/stations", produces = "application/json")
     public List<InfoByStation> getPersonInfoByStationsList(@RequestParam List<Integer> stations) {
-        List<InfoByStation> result = fireStationsService.getPersonInfoByStationsList(stations);
-
-        if (result.size() == 0) {
-            logger.info("Request success but empty answer");
-        }
-        logger.info("Request successful");
-        return result;
+        return fireStationsService.getPersonInfoByStationsList(stations);
     }
 
 
@@ -89,26 +63,12 @@ public class DataController {
     public List<FullInfoPerson> getFullInfoByName(
             @RequestParam(value = "firstName", required = false) String firstName,
             @RequestParam(value = "lastName") String lastName) {
-        List<FullInfoPerson> result = personsService.getFullInfoByName(firstName, lastName);
-        if (result.size() == 0) {
-            logger.info("Request success but empty answer");
-            return null;
-        }
-        logger.info("Request successful");
-        return result;
+        return personsService.getFullInfoByName(firstName, lastName);
     }
 
-    @JsonView(View.FilterEmailPerson.class)
     @GetMapping(value = "communityEmail", produces = "application/json")
-    public List<Person> getEmailsFromCity(@RequestParam String city) {
-       List<Person> result = personsService.getEmailsFromCity(city);
-
-        if (result.size() == 0) {
-            logger.info("Request success but empty answer");
-            return null;
-        }
-        logger.info("Request successful");
-        return result;
+    public List<String> getEmailsFromCity(@RequestParam String city) {
+        return personsService.getEmailsFromCity(city);
     }
 
     @PostMapping(
@@ -125,8 +85,8 @@ public class DataController {
 
     @DeleteMapping(
             value = "/person", consumes = "application/json")
-    public void deletePerson(@RequestBody Person person) {
-        personsService.deletePerson(person);
+    public boolean deletePerson(@RequestBody Person person) {
+        return personsService.deletePerson(person);
     }
 
     @PostMapping(
@@ -143,8 +103,8 @@ public class DataController {
 
     @DeleteMapping(
             value = "/medicalRecords", consumes = "application/json")
-    public void deleteMedicalRecords(@RequestBody MedicalRecords medicalRecords) {
-        medicalRecordsService.deleteMedicalRecords(medicalRecords);
+    public boolean deleteMedicalRecords(@RequestBody MedicalRecords medicalRecords) {
+        return medicalRecordsService.deleteMedicalRecords(medicalRecords);
     }
 
     @PostMapping(
@@ -155,8 +115,7 @@ public class DataController {
 
     @DeleteMapping(
             value = "/firestation", consumes = "application/json")
-    public void deleteFirestation(@RequestBody Firestations firestations) {
-        fireStationsService.deleteFirestation(firestations);
+    public boolean deleteFirestation(@RequestBody Firestations firestations) {
+        return fireStationsService.deleteFirestation(firestations);
     }
-
 }

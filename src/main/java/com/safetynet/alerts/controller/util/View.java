@@ -61,9 +61,6 @@ public class View {
     public interface FilterChildAlertEndpoints extends FullFirstName, FullLastName, FullAge {
     }
 
-    public interface FilterEmailPerson extends Email {
-    }
-
     public interface FilterFloodStations extends FullFirstName, FullLastName, FullPhone, FullAge, FullMedications, FullAllergies {
     }
 

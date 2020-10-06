@@ -11,7 +11,7 @@ public interface MedicalRecordsService {
 
     List<String> getAllergiesFromPerson(Person person);
 
-    void deleteMedicalRecords(MedicalRecords model);
+    boolean deleteMedicalRecords(MedicalRecords model);
 
     MedicalRecords updateMedicalRecords(MedicalRecords model);
 

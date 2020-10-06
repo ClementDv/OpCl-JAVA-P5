@@ -11,10 +11,10 @@ import java.util.List;
 public class FirestationsZone {
 
     private List<Person> persons;
-    private int adults;
-    private int children;
+    private long adults;
+    private long children;
 
-    public FirestationsZone(List<Person> persons, int adults, int children) {
+    public FirestationsZone(List<Person> persons, long adults, long children) {
         this.persons = persons;
         this.adults = adults;
         this.children = children;
@@ -28,7 +28,7 @@ public class FirestationsZone {
         this.persons = persons;
     }
 
-    public int getAdults() {
+    public long getAdults() {
         return adults;
     }
 
@@ -36,7 +36,7 @@ public class FirestationsZone {
         this.adults = adults;
     }
 
-    public int getChildren() {
+    public long getChildren() {
         return children;
     }
 

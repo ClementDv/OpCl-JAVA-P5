@@ -13,12 +13,12 @@ public interface PersonsService {
 
     List<FullInfoPerson> getFullInfoByName(String firstName, String lastName);
 
-    List<Person> getEmailsFromCity(@RequestParam String city);
+    List<String> getEmailsFromCity(@RequestParam String city);
 
     Person savePerson(Person model);
 
     Person updatePerson(Person model);
 
-    void deletePerson(Person model);
+    boolean deletePerson(Person model);
 
 }

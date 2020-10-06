@@ -12,7 +12,7 @@ public interface FireStationsService {
 
     FirestationsZone getFirestationZone(int firestationNumber);
 
-    List<Person> getPhoneAlertFromFirestations(int firestation);
+    List<String> getPhoneAlertFromFirestations(int firestation);
 
     List<Integer> getStationByAddress(String address);
 
@@ -22,5 +22,5 @@ public interface FireStationsService {
 
     Firestations saveFirestation(Firestations model);
 
-    void deleteFirestation(Firestations model);
+    boolean deleteFirestation(Firestations model);
 }
