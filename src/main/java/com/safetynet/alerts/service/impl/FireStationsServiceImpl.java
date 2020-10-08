@@ -149,7 +149,7 @@ public class FireStationsServiceImpl implements FireStationsService {
         return null;
     }
 
-    private static boolean isPartOfStation(int station, List<Integer> stationArr) {
+    private boolean isPartOfStation(int station, List<Integer> stationArr) {
         for (Integer stationNumber : stationArr) {
             if (station == stationNumber)
                 return true;
@@ -157,7 +157,7 @@ public class FireStationsServiceImpl implements FireStationsService {
         return false;
     }
 
-    private static int InfoByAddressAlreadyExist(List<InfoByAddress> infoByAddressList, Person person) {
+    private int InfoByAddressAlreadyExist(List<InfoByAddress> infoByAddressList, Person person) {
         if (infoByAddressList.size() != 0) {
             for (InfoByAddress infoByAddress : infoByAddressList) {
                 if (infoByAddress.getAddress().equals(person.getAddress())) {
