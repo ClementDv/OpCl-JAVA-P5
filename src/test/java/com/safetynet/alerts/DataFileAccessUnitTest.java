@@ -1,22 +1,18 @@
 package com.safetynet.alerts;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.alerts.model.DataFile;
 import com.safetynet.alerts.model.Firestations;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.DataFileAccess;
-import com.safetynet.alerts.repository.impl.DataFileAccessImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -26,19 +22,13 @@ import java.util.List;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = DataFileAccessUnitTest.Config.class)
+@ContextConfiguration(classes = TestConfig.class)
 public class DataFileAccessUnitTest {
-
-    @ComponentScan(basePackageClasses = {DataFileAccess.class})
-    static class Config {
-        @Bean
-        ObjectMapper objectMapper() { return Mockito.mock(ObjectMapper.class);}
-    }
 
     @Autowired
     private DataFileAccess dataFileAccess;
 
-    @Mock
+    @MockBean
     private ObjectMapper objectMapper;
 
     @Before
