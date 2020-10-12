@@ -26,20 +26,30 @@ public class DataFileAccessImpl implements DataFileAccess {
 
     private static final Logger logger = LogManager.getLogger(DataFileAccessImpl.class);
 
-    public DataFile dataFile;
+    private DataFile dataFile;
 
-    public DataFileAccessImpl(@Autowired ObjectMapper objectMapper) {
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Override
+    public DataFile loadDataFile() {
+        if (dataFile != null) {
+            return dataFile;
+        }
+
         try {
-            this.dataFile = objectMapper.readValue(new File("datafile.json"), DataFile.class);
+            dataFile = objectMapper.readValue(new File("datafile.json"), DataFile.class);
             logger.debug("Json correctly mapped!");
         } catch (IOException e) {
             logger.error("Error while JSON mapping!");
             throw new RuntimeException(e);
         }
+        return dataFile;
     }
 
     @Override
     public int getNbStationByAddressFromPerson(Person person) {
+        loadDataFile();
         return getFirestations()
                 .stream()
                 .filter(fireStation -> person.getAddress().equals(fireStation.getAddress()))
@@ -50,7 +60,7 @@ public class DataFileAccessImpl implements DataFileAccess {
 
     @Override
     public int getAgeFromPerson(Person person) {
-        for (MedicalRecords medicalRecords : dataFile.getMedicalrecords()) {
+        for (MedicalRecords medicalRecords : loadDataFile().getMedicalrecords()) {
             if (Objects.equals(person.getFirstName(), medicalRecords.getFirstName()) &&
                     Objects.equals(person.getLastName(), medicalRecords.getLastName())) {
                 return getAgeFromBirthdate(medicalRecords.getBirthdate());
@@ -63,7 +73,7 @@ public class DataFileAccessImpl implements DataFileAccess {
     public List<Person> getPersonsByFirestationNumber(int firestationNumber) {
         List<Person> result = new ArrayList<>();
 
-        for (Person person : dataFile.getPersons()) {
+        for (Person person : loadDataFile().getPersons()) {
             if (getNbStationByAddressFromPerson(person) == firestationNumber) {
                 result.add(person);
             }
@@ -75,7 +85,7 @@ public class DataFileAccessImpl implements DataFileAccess {
     public List<Person> getPersonsByAddress(String address) {
         List<Person> result = new ArrayList<>();
 
-        for (Person person : dataFile.getPersons()) {
+        for (Person person : loadDataFile().getPersons()) {
             if (person.getAddress().equals(address)) {
                 result.add(person);
             }
@@ -93,26 +103,26 @@ public class DataFileAccessImpl implements DataFileAccess {
 
     @Override
     public List<Firestations> getFirestations() {
-        return new ArrayList<>(dataFile.getFirestations());
+        return new ArrayList<>(loadDataFile().getFirestations());
     }
 
     @Override
     public List<Person> getPersons() {
-        return new ArrayList<>(dataFile.getPersons());
+        return new ArrayList<>(loadDataFile().getPersons());
     }
 
     @Override
     public List<MedicalRecords> getMedicalrecords() {
-        return new ArrayList<>(dataFile.getMedicalrecords());
+        return new ArrayList<>(loadDataFile().getMedicalrecords());
     }
 
     @Override
     public Person savePerson(Person model) {
         boolean i;
-        if (dataFile.getPersons() != null) {
-            i = dataFile.getPersons().stream().noneMatch(person -> person.equals(model));
+        if (loadDataFile().getPersons() != null) {
+            i = loadDataFile().getPersons().stream().noneMatch(person -> person.equals(model));
             if (i) {
-                dataFile.getPersons().add(model);
+                loadDataFile().getPersons().add(model);
                 return model;
             }
         }
@@ -121,9 +131,9 @@ public class DataFileAccessImpl implements DataFileAccess {
 
     @Override
     public Person updatePerson(Person model) {
-        if (dataFile.getPersons() != null) {
-            dataFile.getPersons().stream().filter(person -> model.getFirstName().compareTo(person.getFirstName()) == 0 &&
-                    model.getLastName().compareTo(person.getLastName()) == 0).findFirst().ifPresent(person -> dataFile.getPersons().set(dataFile.getPersons().indexOf(person), model));
+        if (loadDataFile().getPersons() != null) {
+            loadDataFile().getPersons().stream().filter(person -> model.getFirstName().compareTo(person.getFirstName()) == 0 &&
+                    model.getLastName().compareTo(person.getLastName()) == 0).findFirst().ifPresent(person -> loadDataFile().getPersons().set(loadDataFile().getPersons().indexOf(person), model));
             return model;
         }
         return null;
@@ -131,22 +141,22 @@ public class DataFileAccessImpl implements DataFileAccess {
 
     @Override
     public boolean deletePerson(Person model) {
-        return dataFile.getPersons().remove(model);
+        return loadDataFile().getPersons().remove(model);
     }
 
     @Override
     public MedicalRecords saveMedicalRecords(MedicalRecords model) {
         boolean i;
-        if (dataFile.getMedicalrecords() != null) {
-            i = dataFile.getMedicalrecords().stream().noneMatch(medicalRecords -> medicalRecords.equals(model));
+        if (loadDataFile().getMedicalrecords() != null) {
+            i = loadDataFile().getMedicalrecords().stream().noneMatch(medicalRecords -> medicalRecords.equals(model));
             if (i) {
-                dataFile.getMedicalrecords().add(model);
+                loadDataFile().getMedicalrecords().add(model);
                 return model;
             }
         } else {
             List<MedicalRecords> medicalRecordsList = new ArrayList<>();
             medicalRecordsList.add(model);
-            dataFile.setMedicalrecords(medicalRecordsList);
+            loadDataFile().setMedicalrecords(medicalRecordsList);
             return model;
         }
         return null;
@@ -154,9 +164,9 @@ public class DataFileAccessImpl implements DataFileAccess {
 
     @Override
     public MedicalRecords updateMedicalRecords(MedicalRecords model) {
-        if (dataFile.getMedicalrecords() != null) {
-            dataFile.getMedicalrecords().stream().filter(medicalRecords -> model.getFirstName().compareTo(medicalRecords.getFirstName()) == 0 &&
-                    model.getLastName().compareTo(medicalRecords.getLastName()) == 0).findFirst().ifPresent(medicalRecords -> dataFile.getMedicalrecords().set(dataFile.getMedicalrecords().indexOf(medicalRecords), model));
+        if (loadDataFile().getMedicalrecords() != null) {
+            loadDataFile().getMedicalrecords().stream().filter(medicalRecords -> model.getFirstName().compareTo(medicalRecords.getFirstName()) == 0 &&
+                    model.getLastName().compareTo(medicalRecords.getLastName()) == 0).findFirst().ifPresent(medicalRecords -> loadDataFile().getMedicalrecords().set(loadDataFile().getMedicalrecords().indexOf(medicalRecords), model));
             return model;
         }
         return null;
@@ -164,22 +174,22 @@ public class DataFileAccessImpl implements DataFileAccess {
 
     @Override
     public boolean deleteMedicalRecords(MedicalRecords model) {
-        return dataFile.getMedicalrecords().remove(model);
+        return loadDataFile().getMedicalrecords().remove(model);
     }
 
     @Override
     public Firestations saveFirestation(Firestations model) {
         boolean i;
-        if (dataFile.getFirestations() != null) {
-            i = dataFile.getFirestations().stream().noneMatch(firestations -> firestations.equals(model));
+        if (loadDataFile().getFirestations() != null) {
+            i = loadDataFile().getFirestations().stream().noneMatch(firestations -> firestations.equals(model));
             if (i) {
-                dataFile.getFirestations().add(model);
+                loadDataFile().getFirestations().add(model);
                 return model;
             }
         } else {
             List<Firestations> firestationsList = new ArrayList<>();
             firestationsList.add(model);
-            dataFile.setFirestations(firestationsList);
+            loadDataFile().setFirestations(firestationsList);
             return model;
         }
         return null;
@@ -187,6 +197,6 @@ public class DataFileAccessImpl implements DataFileAccess {
 
     @Override
     public boolean deleteFirestation(Firestations model) {
-        return dataFile.getFirestations().remove(model);
+        return loadDataFile().getFirestations().remove(model);
     }
 }

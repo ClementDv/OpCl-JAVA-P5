@@ -1,5 +1,6 @@
 package com.safetynet.alerts.repository;
 
+import com.safetynet.alerts.model.DataFile;
 import com.safetynet.alerts.model.Firestations;
 import com.safetynet.alerts.model.MedicalRecords;
 import com.safetynet.alerts.model.Person;
@@ -7,6 +8,8 @@ import com.safetynet.alerts.model.Person;
 import java.util.List;
 
 public interface DataFileAccess {
+
+    DataFile loadDataFile();
 
     int getNbStationByAddressFromPerson(Person person);
 
