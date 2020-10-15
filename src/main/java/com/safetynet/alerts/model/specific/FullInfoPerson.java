@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.safetynet.alerts.controller.util.View;
 
 import java.util.List;
+import java.util.Objects;
 
 public class FullInfoPerson {
 
@@ -152,6 +153,30 @@ public class FullInfoPerson {
 
     public void setStation(int station) {
         this.station = station;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FullInfoPerson that = (FullInfoPerson) o;
+        return age == that.age &&
+                station == that.station &&
+                Objects.equals(firstName, that.firstName) &&
+                Objects.equals(lastName, that.lastName) &&
+                Objects.equals(address, that.address) &&
+                Objects.equals(city, that.city) &&
+                Objects.equals(zip, that.zip) &&
+                Objects.equals(phone, that.phone) &&
+                Objects.equals(email, that.email) &&
+                Objects.equals(Birthdate, that.Birthdate) &&
+                Objects.equals(medications, that.medications) &&
+                Objects.equals(allergies, that.allergies);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, address, city, zip, phone, email, Birthdate, age, medications, allergies, station);
     }
 
     @Override

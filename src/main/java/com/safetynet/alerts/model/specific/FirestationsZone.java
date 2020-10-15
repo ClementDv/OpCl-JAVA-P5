@@ -6,6 +6,7 @@ import com.safetynet.alerts.controller.util.View;
 import com.safetynet.alerts.model.Person;
 
 import java.util.List;
+import java.util.Objects;
 
 @JsonView(View.FirestationById.class)
 public class FirestationsZone {
@@ -42,6 +43,21 @@ public class FirestationsZone {
 
     public void setChildren(int children) {
         this.children = children;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FirestationsZone that = (FirestationsZone) o;
+        return adults == that.adults &&
+                children == that.children &&
+                Objects.equals(persons, that.persons);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(persons, adults, children);
     }
 
     @Override

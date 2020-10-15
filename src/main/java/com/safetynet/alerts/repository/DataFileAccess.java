@@ -19,6 +19,8 @@ public interface DataFileAccess {
 
     List<Person> getPersonsByAddress(String address);
 
+    public int getAgeFromBirthdate(String birthdate);
+
     List<Firestations> getFirestations();
 
     List<Person> getPersons();

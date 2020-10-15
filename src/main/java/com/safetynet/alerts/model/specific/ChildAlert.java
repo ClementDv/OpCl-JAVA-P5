@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.safetynet.alerts.controller.util.View;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @JsonView(View.FilterChildAlertEndpoints.class)
@@ -41,6 +42,21 @@ public class ChildAlert {
 
     public void setAdults(List<FullInfoPerson> adults) {
         Adults = adults;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChildAlert that = (ChildAlert) o;
+        return Objects.equals(address, that.address) &&
+                Objects.equals(Child, that.Child) &&
+                Objects.equals(Adults, that.Adults);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(address, Child, Adults);
     }
 
     @Override

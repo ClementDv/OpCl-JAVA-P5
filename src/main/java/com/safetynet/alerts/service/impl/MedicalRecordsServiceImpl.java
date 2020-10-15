@@ -64,6 +64,6 @@ public class MedicalRecordsServiceImpl implements MedicalRecordsService {
         boolean result = dataFileAccess.deleteMedicalRecords(model);
         if (result) log.info("Request delete MedicalRecords successful.");
         log.info("Request delete MedicalRecords failed.");
-        return false;
+        return result;
     }
 }

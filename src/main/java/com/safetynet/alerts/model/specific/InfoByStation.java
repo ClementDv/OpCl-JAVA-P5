@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.safetynet.alerts.controller.util.View;
 
 import java.util.List;
+import java.util.Objects;
 
 @JsonView(View.FilterFloodStations.class)
 public class InfoByStation {
@@ -29,6 +30,20 @@ public class InfoByStation {
 
     public void setStation(int station) {
         this.station = station;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InfoByStation that = (InfoByStation) o;
+        return station == that.station &&
+                Objects.equals(listInfo, that.listInfo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(station, listInfo);
     }
 
     @Override
