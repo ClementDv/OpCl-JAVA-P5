@@ -6,7 +6,6 @@ import com.safetynet.alerts.model.Firestations;
 import com.safetynet.alerts.model.MedicalRecords;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.DataFileAccess;
-import com.safetynet.alerts.repositoryTest.DataTestUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +14,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
+@ContextConfiguration(classes = TestConfig.class)
 public class DataFileAccessUnitTest {
 
     @Autowired
@@ -34,6 +34,7 @@ public class DataFileAccessUnitTest {
     private ObjectMapper objectMapper;
 
     public static List<Person> personListByStationNumberAndAddressTest = new ArrayList<>();
+
     static {
         personListByStationNumberAndAddressTest.add(new Person("John", "Boyd", "1509 Culver St", "Culver", "97451", "841-874-6512", "jaboyd@email.com"));
         personListByStationNumberAndAddressTest.add(new Person("Jacob", "Boyd", "1509 Culver St", "Culver", "97451", "841-874-6513", "drk@email.com"));

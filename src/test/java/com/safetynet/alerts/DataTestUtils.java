@@ -1,4 +1,4 @@
-package com.safetynet.alerts.repositoryTest;
+package com.safetynet.alerts;
 
 import com.safetynet.alerts.model.Firestations;
 import com.safetynet.alerts.model.MedicalRecords;
