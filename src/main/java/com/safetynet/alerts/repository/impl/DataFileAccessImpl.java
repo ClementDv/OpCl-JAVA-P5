@@ -26,12 +26,18 @@ public class DataFileAccessImpl implements DataFileAccess {
 
     private static final Logger logger = LogManager.getLogger(DataFileAccessImpl.class);
 
+    private ObjectMapper objectMapper;
     private DataFile dataFile;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    public DataFileAccessImpl(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
-    @Override
+    public void setDataFile(DataFile dataFile) {
+        this.dataFile = dataFile;
+    }
+
     public DataFile loadDataFile() {
         if (dataFile != null) {
             return dataFile;
@@ -175,7 +181,7 @@ public class DataFileAccessImpl implements DataFileAccess {
                 Optional<Person> personOptionalTodelete = loadDataFile().getPersons().stream().filter(person -> model.getFirstName().equals(person.getFirstName()) &&
                         model.getLastName().equals(person.getLastName())).findFirst();
                 if (personOptionalTodelete.isPresent()) {
-                    loadDataFile().getPersons().remove(loadDataFile().getPersons().indexOf(personOptionalTodelete.get()));
+                    loadDataFile().getPersons().remove(personOptionalTodelete.get());
                     return true;
                 }
             } else loadDataFile().setPersons(new ArrayList<>());
@@ -225,7 +231,7 @@ public class DataFileAccessImpl implements DataFileAccess {
                 Optional<MedicalRecords> medicalRecordsOptionalToUpdate = loadDataFile().getMedicalrecords().stream().filter(medicalRecords -> model.getFirstName().equals(medicalRecords.getFirstName()) &&
                         model.getLastName().equals(medicalRecords.getLastName())).findFirst();
                 if (medicalRecordsOptionalToUpdate.isPresent()) {
-                    loadDataFile().getMedicalrecords().remove(loadDataFile().getMedicalrecords().indexOf(medicalRecordsOptionalToUpdate.get()));
+                    loadDataFile().getMedicalrecords().remove(medicalRecordsOptionalToUpdate.get());
                     return true;
                 }
             } else loadDataFile().setMedicalrecords(new ArrayList<>());

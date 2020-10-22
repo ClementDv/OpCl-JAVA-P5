@@ -90,19 +90,19 @@ public class DataController {
     }
 
     @PostMapping(
-            value = "/medicalRecords", consumes = "application/json", produces = "application/json")
+            value = "/medicalRecord", consumes = "application/json", produces = "application/json")
     public MedicalRecords createMedicalRecords(@RequestBody MedicalRecords medicalRecords) {
         return medicalRecordsService.saveMedicalRecords(medicalRecords);
     }
 
     @PutMapping(
-            value = "/medicalRecords", consumes = "application/json", produces = "application/json")
+            value = "/medicalRecord", consumes = "application/json", produces = "application/json")
     public MedicalRecords updateMedicalRecords(@RequestBody MedicalRecords medicalRecords) {
         return medicalRecordsService.updateMedicalRecords(medicalRecords);
     }
 
     @DeleteMapping(
-            value = "/medicalRecords", consumes = "application/json")
+            value = "/medicalRecord", consumes = "application/json")
     public boolean deleteMedicalRecords(@RequestBody MedicalRecords medicalRecords) {
         return medicalRecordsService.deleteMedicalRecords(medicalRecords);
     }

@@ -1,10 +1,7 @@
 package com.safetynet.alerts.exception;
 
 import com.safetynet.alerts.exception.firestation.NoFirestationFoundException;
-import com.safetynet.alerts.exception.person.NoChildFoundFromAddressException;
-import com.safetynet.alerts.exception.person.NoPersonFoundException;
-import com.safetynet.alerts.exception.person.NoPersonFoundFromAddressException;
-import com.safetynet.alerts.exception.person.NoPersonFoundFromNameException;
+import com.safetynet.alerts.exception.person.*;
 import com.safetynet.alerts.model.ErrorResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,6 +46,14 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     @ResponseBody
     public ResponseEntity<?> handleNoPersonFoundFromNameException(NoPersonFoundFromNameException e) {
         logger.error("Person(s) from name not found!");
+        return response(new ErrorResponse(404, "PERSON_NOT_FOUND",
+                e.getMessage()));
+    }
+
+    @ExceptionHandler(NoPersonFoundFromFirstNameAndNameException.class)
+    @ResponseBody
+    public ResponseEntity<?> handleNoPersonFoundFromFirstNameAndNameException(NoPersonFoundFromFirstNameAndNameException e) {
+        logger.error("Person(s) from firstname and lastname not found!");
         return response(new ErrorResponse(404, "PERSON_NOT_FOUND",
                 e.getMessage()));
     }

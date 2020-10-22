@@ -1,10 +1,7 @@
 package com.safetynet.alerts.service.impl;
 
 import com.safetynet.alerts.exception.ControllerAdvisor;
-import com.safetynet.alerts.exception.person.NoChildFoundFromAddressException;
-import com.safetynet.alerts.exception.person.NoPersonFoundException;
-import com.safetynet.alerts.exception.person.NoPersonFoundFromAddressException;
-import com.safetynet.alerts.exception.person.NoPersonFoundFromNameException;
+import com.safetynet.alerts.exception.person.*;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.model.specific.ChildAlert;
 import com.safetynet.alerts.model.specific.FullInfoPerson;
@@ -59,7 +56,7 @@ public class PersonsServiceImpl implements PersonsService {
         List<FullInfoPerson> fullInfoPersonList = new ArrayList<>();
 
         for (Person person : dataFileAccess.getPersons()) {
-            if (firstName != null) {
+            if (firstName != null && !firstName.isEmpty()) {
                 if (firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName())) {
                     fullInfoPersonList.add(new FullInfoPerson(person.getFirstName(), person.getLastName(),
                             person.getAddress(), person.getCity(), person.getZip(), null, person.getEmail(),
@@ -80,7 +77,9 @@ public class PersonsServiceImpl implements PersonsService {
             return fullInfoPersonList;
         }
         log.info("Request get full information successful!");
-        throw new NoPersonFoundFromNameException(lastName);
+        if (firstName == null || firstName.isEmpty())
+            throw new NoPersonFoundFromNameException(lastName);
+        throw new NoPersonFoundFromFirstNameAndNameException(firstName, lastName);
     }
 
     @Override

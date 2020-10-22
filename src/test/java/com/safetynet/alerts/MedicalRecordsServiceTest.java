@@ -1,25 +1,24 @@
 package com.safetynet.alerts;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safetynet.alerts.data.CommonTestData;
+import com.safetynet.alerts.data.MedicalRecordTestData;
 import com.safetynet.alerts.model.DataFile;
 import com.safetynet.alerts.model.Firestations;
 import com.safetynet.alerts.model.MedicalRecords;
 import com.safetynet.alerts.model.Person;
 import com.safetynet.alerts.repository.DataFileAccess;
+import com.safetynet.alerts.repository.impl.DataFileAccessImpl;
 import com.safetynet.alerts.service.MedicalRecordsService;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,57 +29,46 @@ public class MedicalRecordsServiceTest {
     @Autowired
     private MedicalRecordsService medicalRecordsService;
 
-    @MockBean
-    private ObjectMapper objectMapper;
-
     @Autowired
     private DataFileAccess dataFileAccess;
 
-    private static List<String> medicationsFromPersonList = new ArrayList<>(List.of("aznol:350mg", "hydrapermazol:100mg"));
+    private List<String> medicationsFromPersonList = MedicalRecordTestData.getMedicationsFromPersonList();
 
-    private static List<String> allergiesFromPersonList = new ArrayList<>(List.of("nillacilan"));
+    private List<String> allergiesFromPersonList = MedicalRecordTestData.getAllergiesFromPersonList();
 
-    public static List<Person> personListTest = DataTestUtils.personListTest;
-
-    public static List<Firestations> firestationsListTest = DataTestUtils.firestationsListTest;
-
-    public static List<MedicalRecords> medicalRecordsListTest = DataTestUtils.medicalRecordsListTest;
-
-    public static DataFile dataFileTest = new DataFile(personListTest, firestationsListTest, medicalRecordsListTest);
+    private List<Person> personList;
 
     @Before
-    public void setup() throws IOException {
-        Mockito.when(objectMapper.readValue(Mockito.any(File.class), Mockito.eq(DataFile.class))).thenReturn(dataFileTest);
+    public void setup() {
+        personList = CommonTestData.getPersonList();
+
+        DataFile dataFileTest = new DataFile(CommonTestData.getPersonList(), CommonTestData.getFirestationsList(), CommonTestData.getMedicalRecordsList());
+        ((DataFileAccessImpl) dataFileAccess).setDataFile(dataFileTest);
     }
 
     @Test
     public void getMedicationFromPersonTest() {
-        Assertions.assertThat(medicalRecordsService.getMedicationsFromPerson(personListTest.get(0))).isEqualTo(medicationsFromPersonList);
+        Assertions.assertThat(medicalRecordsService.getMedicationsFromPerson(personList.get(0))).isEqualTo(medicationsFromPersonList);
     }
 
     @Test
     public void getAllergiesFromPersonTest() {
-        Assertions.assertThat(medicalRecordsService.getAllergiesFromPerson(personListTest.get(0))).isEqualTo(allergiesFromPersonList);
+        Assertions.assertThat(medicalRecordsService.getAllergiesFromPerson(personList.get(0))).isEqualTo(allergiesFromPersonList);
     }
 
-    /*@Test
+    @Test
     public void saveMedicalRecordsTest() {
-        List<MedicalRecords> medicalRecordsListSave = new ArrayList<>(dataFileAccess.loadDataFile().getMedicalrecords());
-        Assertions.assertThat(medicalRecordsService.saveMedicalRecords(DataTestUtils.medicalRecordsToAddTest)).isEqualTo(DataTestUtils.medicalRecordsToAddTest);
-        dataFileAccess.loadDataFile().setMedicalrecords(medicalRecordsListSave);
-    }*/
+        Assertions.assertThat(medicalRecordsService.saveMedicalRecords(CommonTestData.getMedicalRecordsToAddTest())).isEqualTo(CommonTestData.getMedicalRecordsToAddTest());
+    }
 
     @Test
     public void updateMedicalRecordsTest() {
-        List<MedicalRecords> medicalRecordsListSave = new ArrayList<>(dataFileAccess.loadDataFile().getMedicalrecords());
-        Assertions.assertThat(medicalRecordsService.updateMedicalRecords(DataTestUtils.medicalRecordsToUpdateTest)).isEqualTo(DataTestUtils.medicalRecordsToUpdateTest);
-        dataFileAccess.loadDataFile().setMedicalrecords(medicalRecordsListSave);
+        Assertions.assertThat(medicalRecordsService.updateMedicalRecords(CommonTestData.getMedicalRecordsToUpdateTest())).isEqualTo(CommonTestData.getMedicalRecordsToUpdateTest());
+
     }
 
     @Test
     public void deleteMedicalRecordsTest() {
-        List<MedicalRecords> medicalRecordsListSave = new ArrayList<>(dataFileAccess.loadDataFile().getMedicalrecords());
-        Assertions.assertThat(medicalRecordsService.deleteMedicalRecords(DataTestUtils.medicalRecordsToDeleteTest)).isEqualTo(true);
-        dataFileAccess.loadDataFile().setMedicalrecords(medicalRecordsListSave);
+        Assertions.assertThat(medicalRecordsService.deleteMedicalRecords(CommonTestData.getMedicalRecordsToDeleteTest())).isEqualTo(true);
     }
 }

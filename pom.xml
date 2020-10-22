@@ -15,7 +15,7 @@
     <description>API helping urgency service</description>
 
     <properties>
-        <!--<java.version>14</java.version>-->
+        <java.version>14</java.version>
     </properties>
 
     <dependencies>
@@ -84,6 +84,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>9</source>
+                    <target>9</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
