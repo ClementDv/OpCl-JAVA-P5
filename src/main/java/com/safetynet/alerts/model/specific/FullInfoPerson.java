@@ -59,100 +59,115 @@ public class FullInfoPerson {
         this.station = station;
     }
 
+    public FullInfoPerson() {
+    }
+
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public FullInfoPerson setFirstName(String firstName) {
         this.firstName = firstName;
+        return this;
     }
 
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
+    public FullInfoPerson setLastName(String lastName) {
         this.lastName = lastName;
+        return this;
     }
 
     public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public FullInfoPerson setAddress(String address) {
         this.address = address;
+        return this;
     }
 
     public String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public FullInfoPerson setCity(String city) {
         this.city = city;
+        return this;
     }
 
     public String getZip() {
         return zip;
     }
 
-    public void setZip(String zip) {
+    public FullInfoPerson setZip(String zip) {
         this.zip = zip;
+        return this;
     }
 
     public String getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public FullInfoPerson setPhone(String phone) {
         this.phone = phone;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public FullInfoPerson setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public String getBirthdate() {
         return Birthdate;
     }
 
-    public void setBirthdate(String birthdate) {
+    public FullInfoPerson setBirthdate(String birthdate) {
         Birthdate = birthdate;
+        return this;
     }
 
     public int getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public FullInfoPerson setAge(int age) {
         this.age = age;
+        return this;
     }
 
     public List<String> getMedications() {
         return medications;
     }
 
-    public void setMedications(List<String> medications) {
+    public FullInfoPerson setMedications(List<String> medications) {
         this.medications = medications;
+        return this;
     }
 
     public List<String> getAllergies() {
         return allergies;
     }
 
-    public void setAllergies(List<String> allergies) {
+    public FullInfoPerson setAllergies(List<String> allergies) {
         this.allergies = allergies;
+        return this;
     }
 
     public int getStation() {
         return station;
     }
 
-    public void setStation(int station) {
+    public FullInfoPerson setStation(int station) {
         this.station = station;
+        return this;
     }
 
     @Override

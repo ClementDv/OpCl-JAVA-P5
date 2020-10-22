@@ -1,6 +1,7 @@
 package com.safetynet.alerts;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.alerts.controller.DataController;
 import com.safetynet.alerts.data.CommonTestData;
@@ -174,10 +175,13 @@ public class ControllerTest {
 
     @Test
     public void getFullInfoByNameTest() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/personInfo?firstName={firstName}&lastName={LastName}", null, "Boyd")
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/personInfo?firstName={firstName}&lastName={LastName}", null, "Boyd")
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
+        List<FullInfoPerson> infoPersonListResult = Arrays.asList(objectMapper.readValue(result.getResponse().getContentAsString(), FullInfoPerson[].class));
+        Assertions.assertThat(infoPersonListResult).isEqualTo(PersonTestData.getFullInfoPersonByNameList());
     }
 
     @Test

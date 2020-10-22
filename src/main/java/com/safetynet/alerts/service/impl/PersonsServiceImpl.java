@@ -13,9 +13,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonsServiceImpl implements PersonsService {
@@ -53,25 +55,27 @@ public class PersonsServiceImpl implements PersonsService {
 
     @Override
     public List<FullInfoPerson> getFullInfoByName(String firstName, String lastName) {
-        List<FullInfoPerson> fullInfoPersonList = new ArrayList<>();
+        List<Person> allPersons = dataFileAccess.getPersons();
+        List<FullInfoPerson> fullInfoPersonList = allPersons.stream()
+            .filter(person -> {
+                boolean lastNameEquals = person.getLastName().equalsIgnoreCase(lastName);
+                boolean firstNameEquals = !StringUtils.isEmpty(firstName) ? person.getFirstName().equalsIgnoreCase(firstName) : true;
+                return lastNameEquals && firstNameEquals;
+            })
+            .map(p -> new FullInfoPerson()
+                .setFirstName(p.getFirstName())
+                .setLastName(p.getLastName())
+                .setAddress(p.getAddress())
+                .setCity(p.getCity())
+                .setZip(p.getZip())
+                .setEmail(p.getEmail())
+                .setStation(0)
+                .setAge(dataFileAccess.getAgeFromPerson(p))
+                .setMedications(medicalRecordsService.getMedicationsFromPerson(p))
+                .setAllergies(medicalRecordsService.getAllergiesFromPerson(p))
+            )
+            .collect(Collectors.toList());
 
-        for (Person person : dataFileAccess.getPersons()) {
-            if (firstName != null && !firstName.isEmpty()) {
-                if (firstName.equals(person.getFirstName()) && lastName.equals(person.getLastName())) {
-                    fullInfoPersonList.add(new FullInfoPerson(person.getFirstName(), person.getLastName(),
-                            person.getAddress(), person.getCity(), person.getZip(), null, person.getEmail(),
-                            null, dataFileAccess.getAgeFromPerson(person), medicalRecordsService.getMedicationsFromPerson(person),
-                            medicalRecordsService.getAllergiesFromPerson(person), 0));
-                }
-            } else {
-                if (lastName.equals(person.getLastName())) {
-                    fullInfoPersonList.add(new FullInfoPerson(person.getFirstName(), person.getLastName(),
-                            person.getAddress(), person.getCity(), person.getZip(), null, person.getEmail(),
-                            null, dataFileAccess.getAgeFromPerson(person), medicalRecordsService.getMedicationsFromPerson(person),
-                            medicalRecordsService.getAllergiesFromPerson(person), 0));
-                }
-            }
-        }
         if (CollectionUtils.isNotEmpty(fullInfoPersonList)) {
             log.info("Request get full information successful!");
             return fullInfoPersonList;
