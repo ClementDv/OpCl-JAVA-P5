@@ -34,4 +34,53 @@ datafile.json :
 }
 ```  
   
-## Endpoints Type
+## Endpoints
+
+### GET  
+
+**http://localhost:8080/firestation?stationNumber={station_number}**
+
+**http://localhost:8080/childAlert?address={address}**
+
+**http://localhost:8080/phoneAlert?firestation={firestation_number}**
+
+**http://localhost:8080/fire?address={Caddress}**
+
+**http://localhost:8080/flood/stations?stations={list_of_station_numbers}**
+
+**http://localhost:8080/personInfo?firstName={firstName(not_required)}&lastName={lastName}**
+
+**http://localhost:8080/communityEmail?city={city}**
+
+### ADD / PUT / DELETE
+
+You must send a Json body :
+
+**/person**
+
+```
+{ "firstName":"Didier", "lastName":"Jean", "address":"1509 Culver St", "city":"Culver", "zip":"97451", "phone":"2000006", "email":"jaboyd@email.com" }
+```  
+To create / modify or delete a person.
+
+**/firestation**
+
+```  
+{ "address":"29 15th St", "station":"2" }
+```  
+
+*There is no 'put' for firestation*  
+To create / modify or delete a firestation.
+
+**/medicalRecord**
+
+```  
+{ "firstName":"Didier", "lastName":"Jean", "birthdate":"03/06/1984", "medications":["aznol:350mg", "hydrapermazol:100mg"], "allergies":["nillacilan"] }
+```  
+
+To create / modify or delete a medicalRecord.
+  
+    
+---------------------------------------
+*Thank You.  
+CLemDv*
